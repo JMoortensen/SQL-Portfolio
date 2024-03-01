@@ -70,8 +70,7 @@ SET name_day = DAYNAME(date);
 -- name_month
 
 SELECT
-	date,
-    MONTHNAME(date)
+	date, MONTHNAME(date)
 FROM sales;
 
 ALTER TABLE sales ADD COLUMN name_month VARCHAR(10);
@@ -83,20 +82,16 @@ SET name_month = MONTHNAME(date);
 ----- Generic questions -----
 
 -- How many unique cities?
-SELECT
-	COUNT(DISTINCT city)
-FROM sales
+SELECT COUNT(DISTINCT city)
+	FROM sales
 
 -- How many branches?
-SELECT
-	COUNT(DISTINCT branch)
-FROM sales
+SELECTbCOUNT(DISTINCT branch)
+	FROM sales
 
 -- In which city is each branch?
-SELECT
-	DISTINCT branch, 
-	city
-FROM sales
+SELECT DISTINCT branch, city
+	FROM sales
 
 ----- Product questions -----
 
@@ -108,46 +103,50 @@ SELECT COUNT(DISTINCT product_line)
 -- What is the most common payment method?
 SELECT DISTINCT payment_method, COUNT(payment_method) as count
 	FROM sales
-GROUP BY
-	payment_method
+GROUP BY payment_method
 ORDER BY count DESC;
 
 -- What is the most selling product line?
 SELECT DISTINCT product_line, COUNT(quantity) as count
 	FROM sales
-GROUP BY
-	product_line
+GROUP BY product_line
 ORDER BY count DESC;
 
 -- What is the total revenue by month?
  SELECT name_month, SUM(total) AS sum
 	FROM sales
-GROUP BY
-	name_month
+GROUP BY name_month
 ORDER BY sum DESC;
     
 -- What month had the largest COGS?
  SELECT name_month, SUM(cogs) AS sum
 	FROM sales
-GROUP BY
-	name_month
+GROUP BY  name_month
 ORDER BY sum DESC;
 
 -- What product line had the largest revenue?
 SELECT DISTINCT product_line, SUM(total) as sum
 	FROM sales
-GROUP BY
-	product_line
+GROUP BY product_line
 ORDER BY sum DESC;
 
 -- Fetch each product line and add a column to those product line showing "Good", "Bad". Good if its greater than average sales
 SELECT product_line, AVG(total) AS average,
-	IF(AVG(total) > (SELECT AVG(total) FROM sales), "Bad", "Good")
+	IF(AVG(total) > (SELECT AVG(total) FROM sales), "Bad", "Good") AS rating
 	FROM sales
-GROUP BY
-	product_line;
-    
+GROUP BY product_line;
 
 -- Which branch sold more products than average product sold?
+SELECT branch, AVG(quantity),
+	IF(AVG(quantity) > (SELECT AVG(quantity) FROM sales), "Higher", "Lower") AS above_avg
+    FROM sales
+GROUP BY branch;
+
 -- What is the most common product line by gender?
--- What is the average rating of each product line?
+SELECT gender, product_line, COUNT(product_line) AS count
+	FROM sales
+GROUP BY 
+	gender, product_line
+ORDER BY
+	count DESC;
+
