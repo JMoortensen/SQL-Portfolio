@@ -1,5 +1,6 @@
-
-
+--Dataset: Paintings and museum data
+--Source: https://techtfq.com/blog/sql-project-sql-case-study-to-solve-and-practice-sql-queries
+--Queried with: PosgreSQL 12
 
 -- 1) Fetch all the paintings which are not displayed on any museums?
 
