@@ -83,8 +83,30 @@ SELECT museum_id, count(1)
 				HAVING count(1) = 7;
 		   
 -- 10) Which are the top 5 most popular museum? (Popularity is defined based on most no of paintings in a museum)
+
 SELECT * FROM (SELECT museum_id, COUNT(1), 
 				RANK() OVER (ORDER BY COUNT(1) DESC) AS rank
 				FROM work
 				GROUP BY museum_id) as popular_museums
 				WHERE museum_id IS NOT NULL AND rank <= 6;
+
+-- 11) Who are the top 5 most popular artist? (Popularity is defined based on most no of paintings done by an artist)		
+
+SELECT * FROM
+			(SELECT a.full_name, w.artist_id, COUNT(1),
+	 		RANK() OVER (ORDER BY COUNT(1) DESC) AS ranking
+			FROM work w
+			JOIN artist a ON a.artist_id = w.artist_id
+			GROUP BY a.full_name, w.artist_id) AS subquery
+		WHERE ranking <= 5;
+
+-- 12) Display the 3 least popular canva sizes
+
+SELECT * FROM
+		(SELECT c.size_id, c.label, 
+		COUNT(1), DENSE_RANK() OVER (ORDER BY COUNT(1) ASC) AS ranking
+		FROM work w
+		JOIN product_size p ON p.work_id = w.work_id
+		JOIN canvas_size c ON c.size_id::text= p.size_id
+		GROUP BY c.size_id, c.label) subquery
+	WHERE ranking <= 3;
